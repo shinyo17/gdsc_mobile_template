@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_mobile_template/controllers/auth_controller.dart';
+import 'package:gdsc_mobile_template/models/user_model.dart';
 import 'package:gdsc_mobile_template/views/home_screen.dart';
 import 'package:get/get.dart';
 
@@ -47,14 +48,28 @@ class CodeInputScreen extends StatelessWidget {
             SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
-                final result = await authCtrl.codeConfirm(
-                  phone: phone,
-                  code: codeCtrl.text,
-                );
-                if (result) {
-                  Get.off(HomeScreen());
+                bool verified = false;
+                bool signedUp = false;
+
+                if (codeCtrl.text.isNotEmpty && codeCtrl.text.length == 6) {
+                  verified = await authCtrl.codeConfirm(
+                    phone: phone,
+                    code: codeCtrl.text,
+                  );
+                }
+
+                if (verified) {
+                  signedUp = await authCtrl.checkSignedUp(
+                    phone: phone,
+                  );
                 } else {
                   Get.snackbar("오류", "인증번호 확인 필요");
+                }
+
+                if (signedUp) {
+                  Get.off(HomeScreen());
+                } else {
+                  Get.snackbar("TODO", "가입 과정 만들 예정");
                 }
               },
               child: Container(

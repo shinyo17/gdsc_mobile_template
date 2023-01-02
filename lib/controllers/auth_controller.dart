@@ -47,4 +47,12 @@ class AuthController extends GetxController with TokenManager {
     bool result = await authService.codeConfirm(phone: phone, code: code);
     return result;
   }
+
+  Future<bool> checkSignedUp({
+    required String phone,
+  }) async {
+    bool result = await authService.checkSignedUp(phone: phone);
+
+    return result;
+  }
 }

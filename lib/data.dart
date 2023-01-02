@@ -1,3 +1,3 @@
-const String BASE_URL = "http://192.168.0.186:3000";
+const String BASE_URL = "http://192.168.0.187:3000";
 const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";
 const REFRESH_TOKEN_KEY = "REFRESH_TOKEN";

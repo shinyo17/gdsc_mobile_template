@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    authCtrl.checkTokenStatus();
+    // authCtrl.checkTokenStatus();
     super.initState();
   }
 

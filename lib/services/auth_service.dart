@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:gdsc_mobile_template/data.dart';
 import 'package:gdsc_mobile_template/models/body/authorization_body.dart';
 import 'package:gdsc_mobile_template/models/body/code_confirm_body.dart';
-import 'package:gdsc_mobile_template/models/user_model.dart';
+import 'package:gdsc_mobile_template/models/body/sign_up_body.dart';
+import 'package:gdsc_mobile_template/models/response/sign_up_response.dart';
+
 import 'package:gdsc_mobile_template/utils/token_manager.dart';
 
 class AuthService with TokenManager {
@@ -47,6 +51,37 @@ class AuthService with TokenManager {
       var signedAt = resp.data["terms_accepted_at"];
 
       return signedAt != null ? true : false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> signUp({
+    required String phone,
+    required String code,
+  }) async {
+    try {
+      Codec<String, String> stringToBase64 = utf8.fuse(base64);
+      String serialized = stringToBase64.encode("$phone:$code");
+
+      final resp = await Dio().post(
+        "$baseUrl/sign_up",
+        options: Options(
+          headers: {
+            "Authorization": "Basic $serialized",
+          },
+        ),
+        data: {
+          "auth": SignUpBody(termsAcceptedAt: DateTime.now()).toJson(),
+        },
+      );
+
+      final tokenData = SignUpResponse.fromJson(resp.data["token"]);
+
+      saveToken(REFRESH_TOKEN_KEY, tokenData.refreshToken);
+      saveToken(ACCESS_TOKEN_KEY, tokenData.accessToken);
+
+      return true;
     } catch (e) {
       return false;
     }

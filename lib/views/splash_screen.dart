@@ -14,12 +14,29 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    // authCtrl.checkTokenStatus();
+    authCtrl.checkTokenStatus();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Splash Screen",
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 24,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

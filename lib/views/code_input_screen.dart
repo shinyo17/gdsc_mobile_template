@@ -77,9 +77,16 @@ class _CodeInputScreenState extends State<CodeInputScreen> {
                 } else {
                   Get.snackbar("오류", "인증번호 확인 필요");
                 }
-
                 if (signedUp) {
-                  Get.off(HomeScreen());
+                  authCtrl
+                      .login(phone: widget.phone, code: codeCtrl.text)
+                      .then((result) {
+                    if (result) {
+                      Get.off(HomeScreen());
+                    } else {
+                      Get.snackbar("오류", "로그인 오류");
+                    }
+                  });
                 } else {
                   setState(() {
                     showSignUpModal = true;

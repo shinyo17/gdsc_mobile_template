@@ -3,6 +3,8 @@ import 'package:gdsc_mobile_template/models/user_model.dart';
 import 'package:gdsc_mobile_template/services/auth_service.dart';
 import 'package:gdsc_mobile_template/services/user_service.dart';
 import 'package:gdsc_mobile_template/utils/token_manager.dart';
+import 'package:gdsc_mobile_template/views/home_screen.dart';
+import 'package:gdsc_mobile_template/views/phone_input_screen.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController with TokenManager {
@@ -41,5 +43,42 @@ class AuthController extends GetxController with TokenManager {
     }
 
     return result;
+  }
+
+  Future<bool> login({required String phone, required String code}) async {
+    try {
+      final resp = await authService.login(phone: phone, code: code);
+
+      return resp;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> checkTokenStatus() async {
+    String? accessToken = getToken(ACCESS_TOKEN_KEY);
+
+    if (accessToken == null || accessToken.isEmpty) {
+      _moveToSignIn(3000);
+      return;
+    }
+    userService.getUser().then((user) {
+      if (user is UserModel) {
+        currentUser.value = user;
+        _moveToHome(3000);
+      }
+    });
+  }
+
+  void _moveToSignIn(int? delay) {
+    Future.delayed(Duration(milliseconds: delay as int), () {
+      Get.off(PhoneInputScreen());
+    });
+  }
+
+  void _moveToHome(int? delay) {
+    Future.delayed(Duration(milliseconds: delay as int), () {
+      Get.offAll(() => HomeScreen());
+    });
   }
 }

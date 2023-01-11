@@ -5,6 +5,7 @@ import 'package:gdsc_mobile_template/data.dart';
 import 'package:gdsc_mobile_template/models/body/authorization_body.dart';
 import 'package:gdsc_mobile_template/models/body/code_confirm_body.dart';
 import 'package:gdsc_mobile_template/models/body/sign_up_body.dart';
+import 'package:gdsc_mobile_template/models/response/login_response.dart';
 import 'package:gdsc_mobile_template/models/response/sign_up_response.dart';
 
 import 'package:gdsc_mobile_template/utils/token_manager.dart';
@@ -63,7 +64,6 @@ class AuthService with TokenManager {
     try {
       Codec<String, String> stringToBase64 = utf8.fuse(base64);
       String serialized = stringToBase64.encode("$phone:$code");
-
       final resp = await Dio().post(
         "$baseUrl/sign_up",
         options: Options(
@@ -77,6 +77,31 @@ class AuthService with TokenManager {
       );
 
       final tokenData = SignUpResponse.fromJson(resp.data["token"]);
+
+      saveToken(REFRESH_TOKEN_KEY, tokenData.refreshToken);
+      saveToken(ACCESS_TOKEN_KEY, tokenData.accessToken);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> login({required String phone, required String code}) async {
+    try {
+      Codec<String, String> stringToBase64 = utf8.fuse(base64);
+      String serialized = stringToBase64.encode("$phone:$code");
+
+      final resp = await Dio().post(
+        "$baseUrl/login",
+        options: Options(
+          headers: {
+            "Authorization": "Basic $serialized",
+          },
+        ),
+      );
+
+      final tokenData = LoginResponse.fromJson(resp.data["token"]);
 
       saveToken(REFRESH_TOKEN_KEY, tokenData.refreshToken);
       saveToken(ACCESS_TOKEN_KEY, tokenData.accessToken);

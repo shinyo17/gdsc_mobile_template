@@ -15,7 +15,7 @@ class _App extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'GDSC Hongik Mobile',
-      home: PhoneInputScreen(),
+      home: SplashScreen(),
     );
   }
 }

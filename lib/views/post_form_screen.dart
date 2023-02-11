@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gdsc_mobile_template/controllers/auth_controller.dart';
+import 'package:gdsc_mobile_template/controllers/post_controller.dart';
 import 'package:get/get.dart';
 
 class PostFormScreen extends StatelessWidget {
   PostFormScreen({super.key});
 
-  AuthController authCtrl = Get.find<AuthController>();
+  PostController postCtrl = Get.put(PostController());
 
   final TextEditingController titleCtrl = TextEditingController();
   final TextEditingController descriptionCtrl = TextEditingController();
@@ -14,20 +14,39 @@ class PostFormScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SafeArea(
           child: ListView(
-        children: [
-          _TextFieldWidget(
-            textCtrl: titleCtrl,
-            placeholder: "제목",
+            padding: EdgeInsets.all(30),
+            children: [
+              _TextFieldWidget(
+                textCtrl: titleCtrl,
+                placeholder: "제목",
+              ),
+              SizedBox(height: 30),
+              _TextFieldWidget(
+                textCtrl: descriptionCtrl,
+                placeholder: "내용",
+                maxLines: 10,
+              ),
+            ],
           ),
-          _TextFieldWidget(
-            textCtrl: descriptionCtrl,
-            placeholder: "내용",
-            maxLines: 5,
-          ),
-        ],
-      )),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (titleCtrl.text.isNotEmpty && descriptionCtrl.text.isNotEmpty) {
+            final result = postCtrl.writePost(
+              title: titleCtrl.text,
+              description: descriptionCtrl.text,
+            );
+          }
+        },
+        child: const Icon(Icons.save),
+      ),
     );
   }
 }

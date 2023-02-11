@@ -66,6 +66,10 @@ class AuthController extends GetxController with TokenManager {
       if (user is UserModel) {
         currentUser.value = user;
         _moveToHome(3000);
+        return;
+      } else {
+        _moveToSignIn(3000);
+        return;
       }
     });
   }

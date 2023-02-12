@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_mobile_template/controllers/post_controller.dart';
+import 'package:gdsc_mobile_template/views/home_screen.dart';
 import 'package:get/get.dart';
 
 class PostFormScreen extends StatelessWidget {
@@ -39,10 +40,13 @@ class PostFormScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (titleCtrl.text.isNotEmpty && descriptionCtrl.text.isNotEmpty) {
-            final result = postCtrl.writePost(
+            final result = await postCtrl.writePost(
               title: titleCtrl.text,
               description: descriptionCtrl.text,
             );
+            if (result) {
+              Get.offAll(const HomeScreen());
+            }
           }
         },
         child: const Icon(Icons.save),

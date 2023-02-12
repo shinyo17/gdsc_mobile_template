@@ -28,8 +28,7 @@ class AuthService with TokenManager {
     }
   }
 
-  Future<bool> codeConfirm(
-      {required String phone, required String code}) async {
+  Future<bool> codeConfirm({required String phone, required String code}) async {
     try {
       final resp = await Dio().get(
         "$baseUrl",
@@ -37,6 +36,7 @@ class AuthService with TokenManager {
           "auth": CodeConfirmBody(phone: phone, code: code).toJson(),
         },
       );
+
       return resp.data["result"]["verify"] == "ok" ? true : false;
     } catch (e) {
       return false;
@@ -76,6 +76,8 @@ class AuthService with TokenManager {
         },
       );
 
+      print(resp.data);
+
       final tokenData = SignUpResponse.fromJson(resp.data["token"]);
 
       saveToken(REFRESH_TOKEN_KEY, tokenData.refreshToken);
@@ -83,6 +85,7 @@ class AuthService with TokenManager {
 
       return true;
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }

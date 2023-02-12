@@ -28,9 +28,7 @@ class PostService with TokenManager {
         },
       );
 
-      print(resp);
-
-      return true;
+      return resp.data["status"] == "created";
     } catch (e) {
       return false;
     }

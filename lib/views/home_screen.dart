@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gdsc_mobile_template/views/post_form_screen.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,6 +18,12 @@ class HomeScreen extends StatelessWidget {
             Text("홈 화면"),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(PostFormScreen());
+        },
+        child: const Icon(Icons.mode_edit_outline),
       ),
     );
   }
